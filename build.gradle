@@ -15,20 +15,21 @@ subprojects {
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }
+    if (gradle.startParameter.taskNames.contains('uploadArchives')) {
+        apply from: new File(rootProject.projectDir, 'build.publish.gradle')
+    }
 
 }
 
-if (gradle.startParameter.taskNames.contains('uploadArchives')) {
-    apply from: 'build.publish.gradle'
+project(':exhash-core') {
+    description = 'Core library of exhash'
 }
 
-project(':core') {
 
-}
-
-project(':logback') {
+project(':exhash-logback') {
+    description = 'Logback converter to show exhash'
     dependencies {
-        compile project(':core')
+        compile project(':exhash-core')
         compile 'ch.qos.logback:logback-classic:1.1.7'
     }
 }
