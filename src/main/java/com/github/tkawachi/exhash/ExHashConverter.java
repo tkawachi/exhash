@@ -5,23 +5,21 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.core.CoreConstants;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class ExHashConverter extends ClassicConverter {
 
-    private static final String HASH_LINE_NUMBER_PREFIX = "hashLineNumber=";
+    private static final String INCLUDE_LINE_NUMBER_PREFIX = "includeLineNumber=";
     private static final String ALGORITHM_PREFIX = "algorithm=";
     public static final String DEFAULT_ALGORITHM = "MD5";
     public static final boolean DEFAULT_HASH_LINE_NUMBER = false;
 
-    private ExHash exHash = null;
+    private IExceptionHash exHash = null;
 
     @Override
     public void start() {
         String algorithm = DEFAULT_ALGORITHM;
-        boolean hashLineNumber = DEFAULT_HASH_LINE_NUMBER;
+        boolean includeLineNumber = DEFAULT_HASH_LINE_NUMBER;
 
         final List<String> optionList = getOptionList();
         if (optionList != null) {
@@ -29,20 +27,20 @@ public class ExHashConverter extends ClassicConverter {
                 if (option == null) {
                     continue;
                 }
-                if (option.startsWith(HASH_LINE_NUMBER_PREFIX)) {
-                    String value = option.substring(HASH_LINE_NUMBER_PREFIX.length());
-                    hashLineNumber = Boolean.valueOf(value);
+                if (option.startsWith(INCLUDE_LINE_NUMBER_PREFIX)) {
+                    String value = option.substring(INCLUDE_LINE_NUMBER_PREFIX.length());
+                    includeLineNumber = Boolean.valueOf(value);
                 } else if (option.startsWith(ALGORITHM_PREFIX)) {
                     algorithm = option.substring(ALGORITHM_PREFIX.length());
                 }
             }
         }
-        exHash = new ExHash(algorithm, hashLineNumber);
-
-        if (!exHash.isAlgorithmAvailable()) {
-            addError("Message digest algorithm " + exHash.getAlgorithm() + " is not available.");
+        final ExceptionHash h = new ExceptionHash(algorithm, includeLineNumber);
+        if (!h.isAlgorithmAvailable()) {
+            addError("Message digest algorithm " + h.getAlgorithm() + " is not available.");
             return;
         }
+        exHash = h;
 
         super.start();
     }
@@ -55,12 +53,9 @@ public class ExHashConverter extends ClassicConverter {
         }
 
         try {
-            return exHash.hashIThrowableProxy(tp);
-        } catch (NoSuchAlgorithmException e) {
-            addError("Failed to get message digest algorithm: " + exHash.getAlgorithm(), e);
-            return CoreConstants.EMPTY_STRING;
-        } catch (UnsupportedEncodingException e) {
-            addError("Failed to encode StackTraceElement: " + exHash.getCharset(), e);
+            return exHash.hash(new ThrowableProxyThrowable(tp));
+        } catch (ExceptionHashException e) {
+            addError(e.getMessage(), e);
             return CoreConstants.EMPTY_STRING;
         }
     }

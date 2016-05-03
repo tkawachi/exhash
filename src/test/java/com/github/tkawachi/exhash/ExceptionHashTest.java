@@ -4,22 +4,22 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ExHashTest {
+public class ExceptionHashTest {
     @Test
     public void testIsAlgorithmAvailableValid() {
-        ExHash h = new ExHash("MD5", false);
+        ExceptionHash h = new ExceptionHash("MD5", false);
         assertTrue(h.isAlgorithmAvailable());
     }
 
     @Test
     public void testIsAlgorithmAvailableInvalid() {
-        ExHash h = new ExHash("InvalidAlgorithm", false);
+        ExceptionHash h = new ExceptionHash("InvalidAlgorithm", false);
         assertFalse(h.isAlgorithmAvailable());
     }
 
     @Test
     public void testHashLineNumberFalse() throws Throwable {
-        ExHash h = new ExHash("MD5", false);
+        ExceptionHash h = new ExceptionHash("MD5", false);
         Throwable t1 = null;
         Throwable t2 = null;
         try {
@@ -32,12 +32,12 @@ public class ExHashTest {
         } catch (RuntimeException e) {
             t2 = e;
         }
-        assertEquals(h.hashThrowable(t1), h.hashThrowable(t2));
+        assertEquals(h.hash(new StandardThrowable(t1)), h.hash(new StandardThrowable(t2)));
     }
 
     @Test
     public void testHashLineNumberTrue() throws Throwable {
-        ExHash h = new ExHash("MD5", true);
+        ExceptionHash h = new ExceptionHash("MD5", true);
         Throwable t1 = null;
         Throwable t2 = null;
         try {
@@ -50,12 +50,12 @@ public class ExHashTest {
         } catch (RuntimeException e) {
             t2 = e;
         }
-        assertNotEquals(h.hashThrowable(t1), h.hashThrowable(t2));
+        assertNotEquals(h.hash(new StandardThrowable(t1)), h.hash(new StandardThrowable(t2)));
     }
 
     @Test
     public void testHashCause() throws Throwable {
-        ExHash h = new ExHash("MD5", false);
+        ExceptionHash h = new ExceptionHash("MD5", false);
         Throwable t1 = null;
         Throwable t2 = null;
         try {
@@ -68,11 +68,11 @@ public class ExHashTest {
         } catch (RuntimeException e) {
             t2 = e;
         }
-        assertEquals(h.hashThrowable(t1), h.hashThrowable(t2));
+        assertEquals(h.hash(new StandardThrowable(t1)), h.hash(new StandardThrowable(t2)));
 
         // Set a cause to t1. Then hash are different.
         t1.initCause(new RuntimeException("cause"));
-        assertNotEquals(h.hashThrowable(t1), h.hashThrowable(t2));
+        assertNotEquals(h.hash(new StandardThrowable(t1)), h.hash(new StandardThrowable(t2)));
     }
 
 

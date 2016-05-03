@@ -45,17 +45,17 @@ to call `java.security.MessageDigest(ALGORITHM)`. For example, to use SHA-1:
 
 Line numbers in a stacktrace are not hashed by default. By eliminating
 line numbers, the hash is tolerant of small code changes like adding a
-comment line. Line numbers can be included by passing `hashLineNumber=true`.
+comment line. Line numbers can be included by passing `includeLineNumber=true`.
 For example,
 
 ```
-<pattern>%date %message exHash=%exHash{hashLineNumber=true}%n</pattern>
+<pattern>%date %message exHash=%exHash{includeLineNumber=true}%n</pattern>
 ```
 
 Multiple options can be passed by separating by comma (`,`).
 
 ```
-<pattern>%date %message exHash=%exHash{algorithm=SHA-1, hashLineNumber=true}%n</pattern>
+<pattern>%date %message exHash=%exHash{algorithm=SHA-1, includeLineNumber=true}%n</pattern>
 ```
 
 Length of a hash can be limited by [Format modifies](http://logback.qos.ch/manual/layouts.html#formatModifiers).
