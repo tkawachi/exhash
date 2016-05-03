@@ -8,7 +8,13 @@ It will be easier to search using the hash.
 
 ## Usage
 
-(TODO Publish .jar and write how to add a dependency)
+Add a following dependency to build.gradle:
+
+```
+dependencies {
+  compile 'com.github.tkawachi:logback-exhash:0.0.1'
+}
+```
 
 Add following to `logback.xml` under `<configuration>`
 
