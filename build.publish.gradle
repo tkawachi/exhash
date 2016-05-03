@@ -1,0 +1,73 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+boolean validProperty(propertyName) {
+    try { project.property(propertyName) != null }
+    catch (MissingPropertyException) { false }
+}
+
+assert validProperty('signing.keyId'),             'properties for signing must be provided'
+assert validProperty('signing.secretKeyRingFile'), 'properties for signing must be provided'
+assert validProperty('sonatypeUsername'),          'properties for publish must be provided'
+assert validProperty('sonatypeFullname'),          'properties for publish must be provided'
+
+String askPassword(prompt) {
+    "${System.console().readPassword(prompt)}"
+}
+ext.'signing.password' = askPassword("\nEnter password for PGP key ${property('signing.keyId')}: ")
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication(userName: sonatypeUsername, password: sonatypePassword)
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+            authentication(userName: sonatypeUsername, password: sonatypePassword)
+        }
+
+        pom.project {
+            name 'logback-exhash'
+            packaging 'jar'
+            description project.description
+            url 'https://github.com/tkawachi/logback-exhash'
+            scm {
+                url 'git@github.com:tkawachi/logback-exhash.git'
+                connection 'scm:git:git@github.com:tkawachi/logback-exhash.git'
+                developerConnection 'scm:git:git@github.com:tkawachi/logback-exhash.git'
+            }
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id sonatypeUsername
+                    name sonatypeFullname
+                }
+            }
+        }
+    }
+}
