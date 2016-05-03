@@ -69,3 +69,5 @@ will output something like this:
 ```
 2016-05-04 01:23:22,916 Message exHash=91803EF
 ```
+
+[Sample logback.xml used in tests](https://github.com/tkawachi/logback-exhash/blob/master/src/test/resources/logback-test.xml)
