@@ -1,0 +1,15 @@
+<configuration>
+
+    <conversionRule conversionWord="exHash"
+                    converterClass="com.github.tkawachi.exhash.ExHashConverter" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date - [%level] - %logger %message%n{}exHash=%exHash%n%xException%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
