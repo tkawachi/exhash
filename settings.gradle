@@ -1,2 +1,3 @@
+include 'core', 'logback'
 rootProject.name = 'logback-exhash'
 
