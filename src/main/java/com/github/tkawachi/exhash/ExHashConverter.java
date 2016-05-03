@@ -3,27 +3,26 @@ package com.github.tkawachi.exhash;
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
-import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.CoreConstants;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class ExHashConverter extends ClassicConverter {
 
-    private static final String UTF_8 = "UTF-8";
-    private static final char SEPARATOR = '/';
     private static final String HASH_LINE_NUMBER_PREFIX = "hashLineNumber=";
     private static final String ALGORITHM_PREFIX = "algorithm=";
+    public static final String DEFAULT_ALGORITHM = "MD5";
+    public static final boolean DEFAULT_HASH_LINE_NUMBER = false;
 
-    private String algorithm = "MD5";
-    private boolean hashLineNumber = false;
+    private ExHash exHash = null;
 
     @Override
     public void start() {
+        String algorithm = DEFAULT_ALGORITHM;
+        boolean hashLineNumber = DEFAULT_HASH_LINE_NUMBER;
+
         final List<String> optionList = getOptionList();
         if (optionList != null) {
             for (final String option : optionList) {
@@ -38,6 +37,13 @@ public class ExHashConverter extends ClassicConverter {
                 }
             }
         }
+        exHash = new ExHash(algorithm, hashLineNumber);
+
+        if (!exHash.isAlgorithmAvailable()) {
+            addError("Message digest algorithm " + exHash.getAlgorithm() + " is not available.");
+            return;
+        }
+
         super.start();
     }
 
@@ -48,42 +54,14 @@ public class ExHashConverter extends ClassicConverter {
             return CoreConstants.EMPTY_STRING;
         }
 
-        final StringBuilder buffer = new StringBuilder();
-        appendStackTraceElements(tp, buffer);
         try {
-            return hash(buffer.toString());
+            return exHash.hashIThrowableProxy(tp);
         } catch (NoSuchAlgorithmException e) {
-            addError("Failed to get algorithm: " + algorithm, e);
+            addError("Failed to get message digest algorithm: " + exHash.getAlgorithm(), e);
             return CoreConstants.EMPTY_STRING;
         } catch (UnsupportedEncodingException e) {
-            addError("Failed to encode StackTraceElement: " + UTF_8, e);
+            addError("Failed to encode StackTraceElement: " + exHash.getCharset(), e);
             return CoreConstants.EMPTY_STRING;
         }
-    }
-
-    private void appendStackTraceElements(final IThrowableProxy tp, final StringBuilder buffer) {
-        final StackTraceElementProxy[] elements = tp.getStackTraceElementProxyArray();
-        for (final StackTraceElementProxy elem : elements) {
-            final StackTraceElement ste = elem.getStackTraceElement();
-            buffer.append(ste.getClassName())
-                    .append(SEPARATOR)
-                    .append(ste.getMethodName())
-                    .append(SEPARATOR);
-            if (hashLineNumber) {
-                buffer.append(ste.getLineNumber())
-                        .append(SEPARATOR);
-            }
-        }
-
-        final IThrowableProxy cause = tp.getCause();
-        if (cause != null) {
-            appendStackTraceElements(cause, buffer);
-        }
-    }
-
-    private String hash(final String string) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        final MessageDigest md = MessageDigest.getInstance(algorithm);
-        final byte[] hashBytes = md.digest(string.getBytes(UTF_8));
-        return DatatypeConverter.printHexBinary(hashBytes);
     }
 }
