@@ -38,15 +38,16 @@ dependencies {
 
 ```java
 Throwable th = ...;
-ExceptionHash h = new ExceptionHash();
-h.hash(new StandardThrowable(th)); // returns an string hash
+IStacktrace stacktrace = Stacktrace.getInstance(th);
+IStacktraceHash h = new StacktraceHash();
+h.hash(stacktrace); // returns a string hash
 ```
 
 To include line numbers in a stack trace string, pass true to `includeLineNumbers`
-constructor argument.
+argument.
 
 ```java
-ExceptionHash h = new ExceptionHash(ExceptionHash.DEFAULT_ALGORITHM, true);
+IStacktrace stacktrace = Stacktrace.getInstance(th, true);
 ```
 
 A message digest algorithm can be changed by passing `algorithm` constructor argument.
@@ -54,7 +55,7 @@ It should be a valid algorithm to call `java.security.MessageDigest()`.
 For example, to use SHA-1:
 
 ```java
-ExceptionHash h = new ExceptionHash("SHA-1", ExceptionHash.DEFAULT_INCLUDE_LINE_NUMBER);
+IStacktraceHash h = new StacktraceHash("SHA-1");
 ```
 
 ## exhash-logback usage

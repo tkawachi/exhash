@@ -4,25 +4,21 @@ import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.core.CoreConstants;
-import com.github.tkawachi.exhash.core.ExceptionHash;
-import com.github.tkawachi.exhash.core.ExceptionHashException;
-import com.github.tkawachi.exhash.core.IExceptionHash;
+import com.github.tkawachi.exhash.core.*;
 
 import java.util.List;
 
 public class ExHashConverter extends ClassicConverter {
 
+    public static final String DEFAULT_ALGORITHM = "MD5";
     private static final String INCLUDE_LINE_NUMBER_PREFIX = "includeLineNumber=";
     private static final String ALGORITHM_PREFIX = "algorithm=";
-    public static final String DEFAULT_ALGORITHM = "MD5";
-    public static final boolean DEFAULT_HASH_LINE_NUMBER = false;
-
-    private IExceptionHash exHash = null;
+    private IStacktraceHash exHash = null;
+    private boolean includeLineNumber = ThrowableStacktrace.DEFAULT_INCLUDE_LINE_NUMBER;
 
     @Override
     public void start() {
         String algorithm = DEFAULT_ALGORITHM;
-        boolean includeLineNumber = DEFAULT_HASH_LINE_NUMBER;
 
         final List<String> optionList = getOptionList();
         if (optionList != null) {
@@ -38,7 +34,7 @@ public class ExHashConverter extends ClassicConverter {
                 }
             }
         }
-        final ExceptionHash h = new ExceptionHash(algorithm, includeLineNumber);
+        final StacktraceHash h = new StacktraceHash(algorithm);
         if (!h.isAlgorithmAvailable()) {
             addError("Message digest algorithm " + h.getAlgorithm() + " is not available.");
             return;
@@ -56,8 +52,9 @@ public class ExHashConverter extends ClassicConverter {
         }
 
         try {
-            return exHash.hash(new ThrowableProxyThrowable(tp));
-        } catch (ExceptionHashException e) {
+            IStacktrace st = Stacktrace.getInstance(new ThrowableProxyThrowable(tp), includeLineNumber);
+            return exHash.hash(st);
+        } catch (StacktraceHashException e) {
             addError(e.getMessage(), e);
             return CoreConstants.EMPTY_STRING;
         }
