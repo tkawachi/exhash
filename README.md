@@ -15,12 +15,13 @@ class names and method names, not including line numbers. By not including line 
 the generated hash is tolerant of small code changes like adding a comment line.
 
 ```
-package1.Class1/func1
-package2.Class2/func2
+pkg.Class1/func1
+pkg.Class2/func2
 Caused by:
-package3.Class3/func3
-package4.Class4/func4
----
+pkg.Class3/func3
+pkg.Class4/func4
+----
+----
 ```
 
 Then it hashes a stack trace string with MD5.

@@ -6,15 +6,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class ExceptionHash implements IExceptionHash {
+    public static final String DEFAULT_ALGORITHM = "MD5";
+    public static final boolean DEFAULT_INCLUDE_LINE_NUMBER = false;
     private static final String CHARSET = "UTF-8";
     private static final char SEPARATOR1 = '/';
     private static final char SEPARATOR2 = '\n';
     private static final String CAUSED_BY = "Caused by:\n";
     private static final String SUPPRESSED = "Suppressed:\n";
-    private static final String END_OF_THROWABLE = "----";
-    public static final String DEFAULT_ALGORITHM = "MD5";
-    public static final boolean DEFAULT_INCLUDE_LINE_NUMBER = false;
-
+    private static final String END_OF_THROWABLE = "----\n";
     private final String algorithm;
     private final boolean includeLineNumber;
 
