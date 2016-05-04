@@ -28,7 +28,12 @@ assert validProperty('sonatypeFullname'),          'properties for publish must 
 String askPassword(prompt) {
     "${System.console().readPassword(prompt)}"
 }
-ext.'signing.password' = askPassword("\nEnter password for PGP key ${property('signing.keyId')}: ")
+
+if (!validProperty('sining.password')) {
+    def newPassword =
+            askPassword("\nEnter password for PGP key ${property('signing.keyId')}: ")
+    ext.'signing.password' = newPassword
+}
 
 signing {
     sign configurations.archives
@@ -46,7 +51,7 @@ uploadArchives {
         }
 
         pom.project {
-            name 'logback-exhash'
+            name project.name
             packaging 'jar'
             description project.description
             url 'https://github.com/tkawachi/logback-exhash'

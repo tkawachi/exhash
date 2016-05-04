@@ -1,2 +1,4 @@
-rootProject.name = 'logback-exhash'
-
+include 'core', 'logback'
+rootProject.name = 'exhash'
+project(':core').name = 'exhash-core'
+project(':logback').name = 'exhash-logback'

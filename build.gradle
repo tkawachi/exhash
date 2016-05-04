@@ -1,19 +1,36 @@
-group 'com.github.tkawachi'
-version '0.0.2-SNAPSHOT'
+subprojects {
+    group 'com.github.tkawachi'
+    version '0.0.2-SNAPSHOT'
 
-apply plugin: 'java'
+    apply plugin: 'java'
 
-sourceCompatibility = 1.5
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
+
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.11'
+    }
+    if (gradle.startParameter.taskNames.contains('uploadArchives')) {
+        apply from: new File(rootProject.projectDir, 'build.publish.gradle')
+    }
+
 }
 
-dependencies {
-    compile 'ch.qos.logback:logback-classic:1.1.7'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+project(':exhash-core') {
+    description = 'Core library of exhash'
 }
 
-if (gradle.startParameter.taskNames.contains('uploadArchives')) {
-    apply from: 'build.publish.gradle'
+
+project(':exhash-logback') {
+    description = 'Logback converter to show exhash'
+    dependencies {
+        compile project(':exhash-core')
+        compile 'ch.qos.logback:logback-classic:1.1.7'
+    }
 }
+
