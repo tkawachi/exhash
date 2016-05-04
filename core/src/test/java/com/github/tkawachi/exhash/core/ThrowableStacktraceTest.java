@@ -20,7 +20,7 @@ public class ThrowableStacktraceTest {
         });
 
         th1.initCause(cause);
-        IStacktrace st = new ThrowableStacktrace(new StandardThrowable(th1));
+        IStacktrace st = new ThrowableStacktrace(new StandardThrowable(th1), false);
         String expected =
                 "pkg.Class1/method1\n" +
                         "pkg.Class2/method2\n" +

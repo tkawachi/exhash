@@ -14,7 +14,7 @@ public class ExHashConverter extends ClassicConverter {
     private static final String INCLUDE_LINE_NUMBER_PREFIX = "includeLineNumber=";
     private static final String ALGORITHM_PREFIX = "algorithm=";
     private IStacktraceHash exHash = null;
-    private boolean includeLineNumber = ThrowableStacktrace.DEFAULT_INCLUDE_LINE_NUMBER;
+    private boolean includeLineNumber = Stacktrace.DEFAULT_INCLUDE_LINE_NUMBER;
 
     @Override
     public void start() {
