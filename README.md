@@ -1,10 +1,27 @@
 # exhash
 
-Log a hash of an exception.
+A hash of an exception.
 
-When a certain exception occurs, it's cumbersome to search logs for the same 
-exceptions. This program logs a hash of an exception's stacktrace.
+When a certain exception with a huge stacktrace occurs, it's cumbersome to search logs
+for the same exceptions. This program logs a hash of an exception's stacktrace.
 It will be easier to search using the hash.
+
+## Idea
+
+It generates a stack trace string from a `Throwable`. A stack trace string only contains
+class names and method names, not including line numbers. By not including line numbers,
+the generated hash is tolerant of small code changes like adding a comment line.
+
+```
+package1.Class1/func1
+package2.Class2/func2
+Caused by:
+package3.Class3/func3
+package4.Class4/func4
+---
+```
+
+Then it hashes a stack trace string with MD5.
 
 ## exhash-core usage
 
@@ -19,7 +36,22 @@ dependencies {
 ```java
 Throwable th = ...;
 ExceptionHash h = new ExceptionHash();
-h.hash(th); // returns an string hash
+h.hash(new StandardThrowable(th)); // returns an string hash
+```
+
+To include line numbers in a stack trace string, pass true to `includeLineNumbers`
+constructor argument.
+
+```java
+ExceptionHash h = new ExceptionHash(ExceptionHash.DEFAULT_ALGORITHM, true);
+```
+
+A message digest algorithm can be changed by passing `algorithm` constructor argument.
+It should be a valid algorithm to call `java.security.MessageDigest()`.
+For example, to use SHA-1:
+
+```java
+ExceptionHash h = new ExceptionHash("SHA-1", ExceptionHash.DEFAULT_INCLUDE_LINE_NUMBER);
 ```
 
 ## exhash-logback usage
@@ -59,9 +91,7 @@ to call `java.security.MessageDigest(ALGORITHM)`. For example, to use SHA-1:
 <pattern>%date %message exHash=%exHash{algorithm=SHA-1}%n</pattern>
 ```
 
-Line numbers in a stacktrace are not hashed by default. By eliminating
-line numbers, the hash is tolerant of small code changes like adding a
-comment line. Line numbers can be included by passing `includeLineNumber=true`.
+Line numbers can be included to generate a hash by passing `includeLineNumber=true`.
 For example,
 
 ```

@@ -13,7 +13,7 @@ public class ExceptionHashTest {
 
     @Test
     public void testIsAlgorithmAvailableInvalid() {
-        ExceptionHash h = new ExceptionHash("InvalidAlgorithm", false);
+        ExceptionHash h = new ExceptionHash("InvalidAlgorithm", ExceptionHash.DEFAULT_INCLUDE_LINE_NUMBER);
         assertFalse(h.isAlgorithmAvailable());
     }
 
@@ -55,7 +55,8 @@ public class ExceptionHashTest {
 
     @Test
     public void testHashCause() throws Throwable {
-        ExceptionHash h = new ExceptionHash(ExceptionHash.DEFAULT_ALGORITHM, false);
+        ExceptionHash h = new ExceptionHash(
+                ExceptionHash.DEFAULT_ALGORITHM, ExceptionHash.DEFAULT_INCLUDE_LINE_NUMBER);
         Throwable t1 = null;
         Throwable t2 = null;
         try {
@@ -71,7 +72,9 @@ public class ExceptionHashTest {
         assertEquals(h.hash(new StandardThrowable(t1)), h.hash(new StandardThrowable(t2)));
 
         // Set a cause to t1. Then hash are different.
-        t1.initCause(new RuntimeException("cause"));
+        if (t1 != null) {
+            t1.initCause(new RuntimeException("cause"));
+        }
         assertNotEquals(h.hash(new StandardThrowable(t1)), h.hash(new StandardThrowable(t2)));
     }
 
