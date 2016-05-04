@@ -54,11 +54,11 @@ uploadArchives {
             name project.name
             packaging 'jar'
             description project.description
-            url 'https://github.com/tkawachi/logback-exhash'
+            url 'https://github.com/tkawachi/exhash'
             scm {
-                url 'git@github.com:tkawachi/logback-exhash.git'
-                connection 'scm:git:git@github.com:tkawachi/logback-exhash.git'
-                developerConnection 'scm:git:git@github.com:tkawachi/logback-exhash.git'
+                url 'git@github.com:tkawachi/exhash.git'
+                connection 'scm:git:git@github.com:tkawachi/exhash.git'
+                developerConnection 'scm:git:git@github.com:tkawachi/exhash.git'
             }
             licenses {
                 license {
