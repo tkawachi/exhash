@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class ExceptionHashTest {
     @Test
     public void testIsAlgorithmAvailableValid() {
-        ExceptionHash h = new ExceptionHash("MD5", false);
+        ExceptionHash h = new ExceptionHash();
         assertTrue(h.isAlgorithmAvailable());
     }
 
@@ -19,7 +19,7 @@ public class ExceptionHashTest {
 
     @Test
     public void testHashLineNumberFalse() throws Throwable {
-        ExceptionHash h = new ExceptionHash("MD5", false);
+        ExceptionHash h = new ExceptionHash(ExceptionHash.DEFAULT_ALGORITHM, false);
         Throwable t1 = null;
         Throwable t2 = null;
         try {
@@ -37,7 +37,7 @@ public class ExceptionHashTest {
 
     @Test
     public void testHashLineNumberTrue() throws Throwable {
-        ExceptionHash h = new ExceptionHash("MD5", true);
+        ExceptionHash h = new ExceptionHash(ExceptionHash.DEFAULT_ALGORITHM, true);
         Throwable t1 = null;
         Throwable t2 = null;
         try {
@@ -55,7 +55,7 @@ public class ExceptionHashTest {
 
     @Test
     public void testHashCause() throws Throwable {
-        ExceptionHash h = new ExceptionHash("MD5", false);
+        ExceptionHash h = new ExceptionHash(ExceptionHash.DEFAULT_ALGORITHM, false);
         Throwable t1 = null;
         Throwable t2 = null;
         try {

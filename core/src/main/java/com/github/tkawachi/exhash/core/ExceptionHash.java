@@ -12,6 +12,8 @@ public class ExceptionHash implements IExceptionHash {
     private static final String CAUSED_BY = "Caused by:\n";
     private static final String SUPPRESSED = "Suppressed:\n";
     private static final String END_OF_THROWABLE = "----";
+    public static final String DEFAULT_ALGORITHM = "MD5";
+    public static final boolean DEFAULT_INCLUDE_LINE_NUMBER = false;
 
     private final String algorithm;
     private final boolean includeLineNumber;
@@ -19,6 +21,10 @@ public class ExceptionHash implements IExceptionHash {
     public ExceptionHash(final String algorithm, final boolean includeLineNumber) {
         this.algorithm = algorithm;
         this.includeLineNumber = includeLineNumber;
+    }
+
+    public ExceptionHash() {
+        this(DEFAULT_ALGORITHM, DEFAULT_INCLUDE_LINE_NUMBER);
     }
 
     public String getAlgorithm() {

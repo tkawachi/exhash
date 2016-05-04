@@ -18,7 +18,7 @@ dependencies {
 
 ```java
 Throwable th = ...;
-ExceptionHash h = new ExceptionHash("MD5", false);
+ExceptionHash h = new ExceptionHash();
 h.hash(th); // returns an string hash
 ```
 
