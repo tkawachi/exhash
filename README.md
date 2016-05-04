@@ -1,4 +1,4 @@
-# logback-exhash
+# exhash
 
 Log a hash of an exception.
 
@@ -6,13 +6,29 @@ When a certain exception occurs, it's cumbersome to search logs for the same
 exceptions. This program logs a hash of an exception's stacktrace.
 It will be easier to search using the hash.
 
-## Usage
+## exhash-core usage
 
 Add a following dependency to build.gradle:
 
 ```
 dependencies {
-  compile 'com.github.tkawachi:logback-exhash:0.0.1'
+  compile 'com.github.tkawachi:exhash-core:0.0.2'
+}
+```
+
+```java
+Throwable th = ...;
+ExceptionHash h = new ExceptionHash("MD5", false);
+h.hash(th); // returns an string hash
+```
+
+## exhash-logback usage
+
+Add a following dependency to build.gradle:
+
+```
+dependencies {
+  compile 'com.github.tkawachi:exhash-logback:0.0.2'
 }
 ```
 
@@ -20,7 +36,7 @@ Add following to `logback.xml` under `<configuration>`
 
 ```
 <conversionRule conversionWord="exHash"
-                converterClass="com.github.tkawachi.exhash.ExHashConverter" />
+                converterClass="com.github.tkawachi.exhash.logback.ExHashConverter" />
 ```
 
 Then `%exHash` can be used in `<pattern>`. For example:
@@ -70,4 +86,4 @@ will output something like this:
 2016-05-04 01:23:22,916 Message exHash=91803EF
 ```
 
-[Sample logback.xml used in tests](https://github.com/tkawachi/logback-exhash/blob/master/src/test/resources/logback-test.xml)
+[Sample logback.xml used in tests](https://github.com/tkawachi/logback-exhash/blob/master/logback/src/test/resources/logback-test.xml)
