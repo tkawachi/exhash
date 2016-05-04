@@ -11,14 +11,9 @@ subprojects {
         mavenCentral()
     }
 
-
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }
-    if (gradle.startParameter.taskNames.contains('uploadArchives')) {
-        apply from: new File(rootProject.projectDir, 'build.publish.gradle')
-    }
-
 }
 
 project(':exhash-core') {
@@ -34,3 +29,8 @@ project(':exhash-logback') {
     }
 }
 
+subprojects {
+    if (gradle.startParameter.taskNames.contains('uploadArchives')) {
+        apply from: new File(rootProject.projectDir, 'build.publish.gradle')
+    }
+}
