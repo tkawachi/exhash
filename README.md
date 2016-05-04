@@ -32,7 +32,7 @@ Add a following dependency to build.gradle:
 
 ```
 dependencies {
-  compile 'com.github.tkawachi:exhash-core:0.0.3'
+  compile 'com.github.tkawachi:exhash-core:0.0.4'
 }
 ```
 
@@ -64,7 +64,7 @@ Add a following dependency to build.gradle:
 
 ```
 dependencies {
-  compile 'com.github.tkawachi:exhash-logback:0.0.3'
+  compile 'com.github.tkawachi:exhash-logback:0.0.4'
 }
 ```
 

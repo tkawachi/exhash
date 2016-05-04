@@ -1,6 +1,6 @@
 subprojects {
     group 'com.github.tkawachi'
-    version '0.0.4-SNAPSHOT'
+    version '0.0.4'
 
     apply plugin: 'java'
 
