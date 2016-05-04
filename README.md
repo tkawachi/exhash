@@ -1,5 +1,7 @@
 # exhash
 
+[![Build Status](https://travis-ci.org/tkawachi/exhash.svg?branch=master)](https://travis-ci.org/tkawachi/exhash)
+
 A hash of an exception.
 
 When a certain exception with a huge stacktrace occurs, it's cumbersome to search logs
