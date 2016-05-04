@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/tkawachi/exhash.svg?branch=master)](https://travis-ci.org/tkawachi/exhash)
 
-A hash of an exception.
+A hash of a stacktrace. It can be used to track an exception.
 
 When a certain exception with a huge stacktrace occurs, it's cumbersome to search logs
 for the same exceptions. This program logs a hash of an exception's stacktrace.
