@@ -1,6 +1,7 @@
 # exhash
 
 [![Build Status](https://travis-ci.org/tkawachi/exhash.svg?branch=master)](https://travis-ci.org/tkawachi/exhash)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1e130164da594eb1b24fae3d5c70937e)](https://www.codacy.com/app/tkawachi/exhash?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=tkawachi/exhash&amp;utm_campaign=Badge_Grade)
 
 A hash of a stacktrace. It can be used to track an exception.
 
